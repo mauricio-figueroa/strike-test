@@ -12,7 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User extends BaseAuditableEntity implements UserDetails {
 
   @Column(name = "username", nullable = false)
@@ -30,6 +30,17 @@ public class User extends BaseAuditableEntity implements UserDetails {
 
   @Column(name = "enabled", nullable = false)
   private Boolean enabled;
+
+  public User(final String username, final String password, final AppUserRole appUserRole, final Boolean locked, final Boolean enabled) {
+    this.username = username;
+    this.password = password;
+    this.appUserRole = appUserRole;
+    this.locked = locked;
+    this.enabled = enabled;
+  }
+
+  public User() {
+  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
