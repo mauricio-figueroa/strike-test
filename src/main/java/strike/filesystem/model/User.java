@@ -16,6 +16,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "users")
 public class User extends BaseAuditableEntity implements UserDetails {
@@ -23,6 +25,7 @@ public class User extends BaseAuditableEntity implements UserDetails {
   @Column(name = "username", nullable = false)
   private String username;
 
+  @JsonIgnore
   @Column(name = "password", nullable = false)
   private String password;
 

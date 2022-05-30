@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import strike.filesystem.dto.CreateOrLoginUserDTO;
 import strike.filesystem.exception.BusinessException;
-import strike.filesystem.exception.UserAlreadyExistException;
 import strike.filesystem.service.UserService;
 import strike.filesystem.service.auth.UserAuthenticationService;
 
@@ -22,7 +21,7 @@ public class UserPublicController {
 
   @Autowired
   public UserPublicController(
-          final UserService userService, final UserAuthenticationService authentication) {
+      final UserService userService, final UserAuthenticationService authentication) {
     this.userService = userService;
     this.authentication = authentication;
   }

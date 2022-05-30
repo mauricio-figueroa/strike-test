@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
   public User save(final String username, final String password) throws UserAlreadyExistException {
     final Optional<User> userOpt = userRepository.findByUsername(username);
 
-    if(userOpt.isPresent()){
+    if (userOpt.isPresent()) {
       throw UserAlreadyExistException.create();
     }
 

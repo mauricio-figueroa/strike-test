@@ -1,6 +1,5 @@
 package strike.filesystem.exception;
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 
 public final class FileNotOwnerException extends BusinessException {

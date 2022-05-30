@@ -1,6 +1,5 @@
 package strike.filesystem.exception;
 
-import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 public final class FileNotFoundException extends BusinessException {

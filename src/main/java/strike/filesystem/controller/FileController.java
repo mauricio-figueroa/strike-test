@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import strike.filesystem.dto.FileMetadataDTO;
 import strike.filesystem.dto.ShareFileRequestBody;
 import strike.filesystem.dto.UpdateFileNameDTO;
@@ -25,98 +28,121 @@ import strike.filesystem.model.User;
 import strike.filesystem.service.FileService;
 
 @RestController
+@RequestMapping("/file")
 public class FileController {
 
-  private final FileService fileService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileController.class);
 
-  public FileController(final FileService fileService) {
-    this.fileService = fileService;
-  }
+    private final FileService fileService;
 
-  @PostMapping("/upload")
-  public ResponseEntity<?> uploadFile(
-      @AuthenticationPrincipal final User user, @RequestParam("file") MultipartFile file) {
-    String message = "";
-    try {
-      fileService.uploadFile(user, file);
-      message = "Uploaded the file successfully: " + file.getOriginalFilename();
-      return ResponseEntity.status(HttpStatus.OK).body(message);
-    } catch (Exception e) {
-      System.out.println(e);
-      message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
+    public FileController(final FileService fileService) {
+        this.fileService = fileService;
     }
-  }
 
-  @PostMapping("/share")
-  public ResponseEntity<?> shareFile(
-      @AuthenticationPrincipal final User user,
-      @RequestBody ShareFileRequestBody shareFileRequestBody)
-      throws BusinessException {
-    fileService.shareFile(
-        user, shareFileRequestBody.getFileID(), shareFileRequestBody.getUsernames());
-    return ResponseEntity.status(HttpStatus.OK).build();
-  }
+    @PostMapping
+    public ResponseEntity<?> uploadFile(
+            @AuthenticationPrincipal final User user,
+            @RequestParam("file") MultipartFile fileToUpload)
+            throws BusinessException {
 
-  @PostMapping("/unshare")
-  public ResponseEntity<?> unShareFile(
-      @AuthenticationPrincipal final User user,
-      @RequestBody ShareFileRequestBody shareFileRequestBody)
-      throws BusinessException {
-    fileService.unShare(
-        user, shareFileRequestBody.getFileID(), shareFileRequestBody.getUsernames());
-    return ResponseEntity.status(HttpStatus.OK).build();
-  }
+        LOGGER.info("User {} Upload File {}", user.getId(), fileToUpload.getOriginalFilename());
 
-  @GetMapping("/meta-data/{id}")
-  public ResponseEntity<FileMetadataDTO> getMetaDataByFile(
-      @AuthenticationPrincipal final User user, @PathVariable final Long id)
-      throws BusinessException {
-    final FileMetadataDTO metaData = fileService.getMetaData(user, id);
-    return ResponseEntity.status(HttpStatus.OK).body(metaData);
-  }
+        final File file = fileService.uploadFile(user, fileToUpload);
 
-  @GetMapping("/meta-data")
-  public ResponseEntity<List<FileMetadataDTO>> getMetaData(
-      @AuthenticationPrincipal final User user)
-      throws BusinessException {
-    final List<FileMetadataDTO> metaData = fileService.getAllMetaData(user);
-    return ResponseEntity.status(HttpStatus.OK).body(metaData);
-  }
+        return ResponseEntity.status(HttpStatus.OK).body(file);
+    }
 
-  @GetMapping("/download/{id}")
-  public ResponseEntity<byte[]> download(
-      @AuthenticationPrincipal final User user, @PathVariable final Long id)
-      throws BusinessException {
+    @GetMapping("/{fileID}")
+    public ResponseEntity<byte[]> download(
+            @AuthenticationPrincipal final User user, @PathVariable final Long fileID)
+            throws BusinessException {
 
-    final File file = fileService.downloadFile(user, id);
-    HttpHeaders header = new HttpHeaders();
-    header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-    header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getFullName());
-    header.setContentLength(file.getFile().length);
+        LOGGER.info("User {} download file {}", user.getId(), fileID);
 
-    return ResponseEntity.status(HttpStatus.OK).headers(header).body(file.getFile());
-  }
+        final File file = fileService.downloadFile(user, fileID);
 
-  @DeleteMapping("/delete/{id}")
-  public ResponseEntity<?> deleteFile(
-      @AuthenticationPrincipal final User user, @PathVariable final Long id)
-      throws BusinessException {
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getFullName());
+        header.setContentLength(file.getFile().length);
 
-    fileService.deleteFile(user, id);
+        return ResponseEntity.status(HttpStatus.OK).headers(header).body(file.getFile());
+    }
 
-    return ResponseEntity.status(HttpStatus.OK).build();
-  }
+    @PostMapping("/share")
+    public ResponseEntity<?> shareFile(
+            @AuthenticationPrincipal final User user,
+            @RequestBody ShareFileRequestBody shareFileRequestBody)
+            throws BusinessException {
+        LOGGER.info("User {} share File {}", user.getId(), shareFileRequestBody.getFileID());
 
-  @PutMapping(
-      value = "/modify/{id}",
-      consumes = {MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<?> shareFile(
-      @AuthenticationPrincipal final User user,
-      @PathVariable final Long id,
-      @RequestBody UpdateFileNameDTO updateFileNameDTO)
-      throws BusinessException {
-    fileService.updateFile(user, id, updateFileNameDTO);
-    return ResponseEntity.status(HttpStatus.OK).build();
-  }
+        fileService.shareFile(
+                user, shareFileRequestBody.getFileID(), shareFileRequestBody.getUsernames());
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/unshare")
+    public ResponseEntity<?> unShareFile(
+            @AuthenticationPrincipal final User user,
+            @RequestBody ShareFileRequestBody shareFileRequestBody)
+            throws BusinessException {
+
+        LOGGER.info("User {} unshare File {}", user.getId(), shareFileRequestBody.getFileID());
+
+        fileService.unShare(
+                user, shareFileRequestBody.getFileID(), shareFileRequestBody.getUsernames());
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/metadata")
+    public ResponseEntity<List<FileMetadataDTO>> getMetaData(@AuthenticationPrincipal final User user)
+            throws BusinessException {
+
+        LOGGER.info("User {} get all files metadata files", user.getId());
+
+        final List<FileMetadataDTO> metaData = fileService.getAllMetaData(user);
+
+        return ResponseEntity.status(HttpStatus.OK).body(metaData);
+    }
+
+    @GetMapping("/metadata/{id}")
+    public ResponseEntity<FileMetadataDTO> getMetaDataByFile(
+            @AuthenticationPrincipal final User user, @PathVariable final Long id)
+            throws BusinessException {
+
+        LOGGER.info("User {} get metadata File {}", user.getId(), id);
+
+        final FileMetadataDTO metaData = fileService.getMetaData(user, id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(metaData);
+    }
+
+    @PutMapping(
+            value = "/{id}",
+            consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> modifyName(
+            @AuthenticationPrincipal final User user,
+            @PathVariable final Long id,
+            @RequestBody UpdateFileNameDTO updateFileNameDTO)
+            throws BusinessException {
+
+        LOGGER.info("User {} modify File name{}", user.getId(), id);
+
+        fileService.updateFile(user, id, updateFileNameDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/{fileID}")
+    public ResponseEntity<?> deleteFile(
+            @AuthenticationPrincipal final User user, @PathVariable final Long fileID)
+            throws BusinessException {
+        LOGGER.info("User {} delete file {}", user.getId(), fileID);
+
+        fileService.deleteFile(user, fileID);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
