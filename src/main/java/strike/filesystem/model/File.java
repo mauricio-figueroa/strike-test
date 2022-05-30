@@ -43,6 +43,7 @@ public class File extends BaseAuditableEntity {
     this.name = name;
     this.file = file;
     this.extension = extension;
+    this.addAllowedUsers(user);
   }
 
   public File() {}

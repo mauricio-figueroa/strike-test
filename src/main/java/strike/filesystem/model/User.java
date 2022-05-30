@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,7 +36,7 @@ public class User extends BaseAuditableEntity implements UserDetails {
   @Column(name = "enabled", nullable = false)
   private Boolean enabled;
 
-  @ManyToMany(mappedBy = "allowedUsers")
+  @ManyToMany(mappedBy = "allowedUsers", fetch = FetchType.EAGER)
   private Set<File> files = new HashSet<>();
 
   public User(

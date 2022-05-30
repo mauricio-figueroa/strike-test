@@ -3,6 +3,8 @@ package strike.filesystem.service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +33,8 @@ public class FileServiceImp implements FileService {
   @Transactional
   public void uploadFile(final User user, final MultipartFile multipartFile) throws IOException {
     final String originalName = FilenameUtils.getBaseName(multipartFile.getOriginalFilename());
-    final String originalExtension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+    final String originalExtension =
+        FilenameUtils.getExtension(multipartFile.getOriginalFilename());
     File file = new File(user, originalName, originalExtension, multipartFile.getBytes());
     fileRepository.save(file);
   }
@@ -145,5 +148,12 @@ public class FileServiceImp implements FileService {
     } else {
       throw FileNotFoundException.create();
     }
+  }
+
+  @Override
+  @Transactional
+  public List<FileMetadataDTO> getAllMetaData(final User user) throws BusinessException {
+    final Set<File> files = user.getFiles();
+    return files.stream().map(FileMetadataDTO::new).collect(Collectors.toList());
   }
 }

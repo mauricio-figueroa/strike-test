@@ -1,5 +1,6 @@
 package strike.filesystem.controller;
 
+import java.util.List;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -68,10 +69,18 @@ public class FileController {
   }
 
   @GetMapping("/meta-data/{id}")
-  public ResponseEntity<FileMetadataDTO> getMetaData(
+  public ResponseEntity<FileMetadataDTO> getMetaDataByFile(
       @AuthenticationPrincipal final User user, @PathVariable final Long id)
       throws BusinessException {
     final FileMetadataDTO metaData = fileService.getMetaData(user, id);
+    return ResponseEntity.status(HttpStatus.OK).body(metaData);
+  }
+
+  @GetMapping("/meta-data")
+  public ResponseEntity<List<FileMetadataDTO>> getMetaData(
+      @AuthenticationPrincipal final User user)
+      throws BusinessException {
+    final List<FileMetadataDTO> metaData = fileService.getAllMetaData(user);
     return ResponseEntity.status(HttpStatus.OK).body(metaData);
   }
 
@@ -83,9 +92,7 @@ public class FileController {
     final File file = fileService.downloadFile(user, id);
     HttpHeaders header = new HttpHeaders();
     header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-    header.set(
-        HttpHeaders.CONTENT_DISPOSITION,
-        "attachment; filename=" + file.getFullName()) ;
+    header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getFullName());
     header.setContentLength(file.getFile().length);
 
     return ResponseEntity.status(HttpStatus.OK).headers(header).body(file.getFile());

@@ -28,4 +28,6 @@ public interface FileService {
 
   void updateFile(final User user, final Long fileID, final UpdateFileNameDTO updateFileNameDTO)
       throws BusinessException;
+
+  List<FileMetadataDTO> getAllMetaData(final User user) throws BusinessException;
 }
