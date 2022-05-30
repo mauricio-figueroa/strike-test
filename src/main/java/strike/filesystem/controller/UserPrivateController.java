@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import strike.filesystem.model.User;
-import strike.filesystem.service.UserService;
-import strike.filesystem.service.auth.UserAuthenticationService;
+import service.UserService;
+import service.auth.UserAuthenticationService;
 
 @RestController
 public class UserPrivateController {

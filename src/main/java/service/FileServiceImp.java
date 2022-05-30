@@ -1,4 +1,4 @@
-package strike.filesystem.service;
+package service;
 
 import java.io.IOException;
 import java.util.List;
@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import strike.filesystem.dto.FileMetadataDTO;
 import strike.filesystem.exception.BusinessException;
 import strike.filesystem.exception.FileNotFoundException;
 import strike.filesystem.exception.FileNotOwnerException;
@@ -43,6 +44,22 @@ public class FileServiceImp implements FileService {
         final List<User> users = userService.findByUsernames(usernames);
         file.addAllowedUserList(users);
         fileRepository.save(file);
+      } else {
+        throw FileNotOwnerException.create();
+      }
+    } else {
+      throw FileNotFoundException.create();
+    }
+  }
+
+  @Override
+  public FileMetadataDTO getMetaData(final User user, final Long fileID) throws BusinessException {
+    final Optional<File> fileOpt = fileRepository.findById(fileID);
+
+    if (fileOpt.isPresent()) {
+      final File file = fileOpt.get();
+      if (file.getOwner().equals(user)) {
+        return new FileMetadataDTO(file);
       } else {
         throw FileNotOwnerException.create();
       }

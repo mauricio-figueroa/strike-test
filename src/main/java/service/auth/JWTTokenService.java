@@ -1,4 +1,4 @@
-package strike.filesystem.service.auth;
+package service.auth;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

@@ -1,4 +1,4 @@
-package strike.filesystem.service.auth;
+package service.auth;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +9,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.ImmutableMap;
+import service.UserService;
 import strike.filesystem.model.User;
-import strike.filesystem.service.UserService;
 
 @Service
 public class TokenAuthenticationService implements UserAuthenticationService {
