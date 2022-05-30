@@ -21,4 +21,8 @@ public interface FileService {
   File downloadFile(final User user, final Long id) throws BusinessException;
 
   void deleteFile(final User user, final Long id) throws BusinessException;
+
+  void unShare(final User user, final Long fileID, final List<String> usernames)
+      throws BusinessException;
+
 }

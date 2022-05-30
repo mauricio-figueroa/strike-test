@@ -55,6 +55,16 @@ public class FileController {
     return ResponseEntity.status(HttpStatus.OK).build();
   }
 
+  @PostMapping("/unshare")
+  public ResponseEntity<?> unShareFile(
+          @AuthenticationPrincipal final User user,
+          @RequestBody ShareFileRequestBody shareFileRequestBody)
+          throws BusinessException {
+    fileService.unShare(
+            user, shareFileRequestBody.getFileID(), shareFileRequestBody.getUsernames());
+    return ResponseEntity.status(HttpStatus.OK).build();
+  }
+
   @GetMapping("/meta-data/{id}")
   public ResponseEntity<FileMetadataDTO> getMetaData(
       @AuthenticationPrincipal final User user, @PathVariable final Long id)

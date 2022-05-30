@@ -41,15 +41,20 @@ public class File extends BaseAuditableEntity {
     this.file = file;
   }
 
-  public File() {
-
-  }
+  public File() {}
 
   public void addAllowedUserList(final List<User> users) {
     if (this.allowedUsers == null) {
       allowedUsers = new HashSet<>();
     }
     allowedUsers.addAll(users);
+  }
+
+  public void removeAllowedUserList(final List<User> users) {
+    if (this.allowedUsers == null) {
+      allowedUsers = new HashSet<>();
+    }
+    users.forEach(allowedUsers::remove);
   }
 
   public void addAllowedUsers(final User user) {

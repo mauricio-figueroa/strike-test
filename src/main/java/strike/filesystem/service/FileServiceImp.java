@@ -100,4 +100,25 @@ public class FileServiceImp implements FileService {
       throw FileNotFoundException.create();
     }
   }
+
+  @Override
+  public void unShare(final User user, final Long fileID, final List<String> usernames)
+      throws BusinessException {
+
+    final Optional<File> fileOpt = fileRepository.findById(fileID);
+
+    if (fileOpt.isPresent()) {
+      final File file = fileOpt.get();
+
+      if (file.getOwner().equals(user)) {
+        final List<User> users = userService.findByUsernames(usernames);
+        file.removeAllowedUserList(users);
+        fileRepository.save(file);
+      } else {
+        throw FileNotOwnerException.create();
+      }
+    } else {
+      throw FileNotFoundException.create();
+    }
+  }
 }
