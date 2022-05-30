@@ -12,6 +12,10 @@ public class UpdateFileNameDTO {
 
   public UpdateFileNameDTO() {}
 
+  public UpdateFileNameDTO(final String newName) {
+    this.newName = newName;
+  }
+
   public String getNewName() {
     return newName;
   }

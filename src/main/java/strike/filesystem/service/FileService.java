@@ -13,7 +13,7 @@ public interface FileService {
 
   File uploadFile(final User user, final MultipartFile multipartFile) throws BusinessException;
 
-  void shareFile(final User user, final Long fileID, final List<String> usernames)
+  File shareFile(final User user, final Long fileID, final List<String> usernames)
       throws BusinessException;
 
   FileMetadataDTO getMetaData(final User user, final Long fileID) throws BusinessException;
@@ -22,7 +22,7 @@ public interface FileService {
 
   void deleteFile(final User user, final Long id) throws BusinessException;
 
-  void unShare(final User user, final Long fileID, final List<String> usernames)
+  File unShare(final User user, final Long fileID, final List<String> usernames)
       throws BusinessException;
 
   void updateFile(final User user, final Long fileID, final UpdateFileNameDTO updateFileNameDTO)

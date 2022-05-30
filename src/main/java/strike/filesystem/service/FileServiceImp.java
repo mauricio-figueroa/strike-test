@@ -1,6 +1,5 @@
 package strike.filesystem.service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -24,104 +23,108 @@ import strike.filesystem.repository.FileRepository;
 @Service
 public class FileServiceImp implements FileService {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(FileServiceImp.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileServiceImp.class);
 
-  private final FileRepository fileRepository;
-  private final UserService userService;
+    private final FileRepository fileRepository;
+    private final UserService userService;
 
-  public FileServiceImp(final FileRepository fileRepository, final UserService userService) {
-    this.fileRepository = fileRepository;
-    this.userService = userService;
-  }
-
-  @Transactional
-  public File uploadFile(final User user, final MultipartFile multipartFile)
-      throws BusinessException {
-
-    final String fileName = FilenameUtils.getBaseName(multipartFile.getOriginalFilename());
-    final String fileExtension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
-
-    try {
-      File file = new File(user, fileName, fileExtension, multipartFile.getBytes());
-      fileRepository.save(file);
-      return file;
-    } catch (IOException e) {
-      LOGGER.error("Error trying to upload file", e);
-      throw new BusinessException("Error trying to upload file", 500);
+    public FileServiceImp(final FileRepository fileRepository, final UserService userService) {
+        this.fileRepository = fileRepository;
+        this.userService = userService;
     }
-  }
 
-  @Override
-  public void shareFile(final User user, final Long fileID, final List<String> usernames)
-      throws BusinessException {
-    final File file = this.validateAndGetFile(user, fileID);
-    final List<User> users = userService.findByUsernames(usernames);
-    file.addAllowedUserList(users);
-    fileRepository.save(file);
-  }
+    @Transactional
+    public File uploadFile(final User user, final MultipartFile multipartFile)
+            throws BusinessException {
 
-  @Override
-  public FileMetadataDTO getMetaData(final User user, final Long fileID) throws BusinessException {
-    final File file = this.validateAndGetFile(user, fileID);
+        final String fileName = FilenameUtils.getBaseName(multipartFile.getOriginalFilename());
+        final String fileExtension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
 
-    return new FileMetadataDTO(file);
-  }
+        try {
+            File file = new File(user, fileName, fileExtension, multipartFile.getBytes());
+            fileRepository.save(file);
+            return file;
+        } catch (Exception e) {
+            LOGGER.error("Error trying to upload file", e);
+            throw new BusinessException("Error trying to upload file", 500);
+        }
+    }
 
-  @Override
-  public File downloadFile(final User user, final Long fileID) throws BusinessException {
-
-    return this.validateAndGetFile(user, fileID);
-  }
-
-  @Override
-  public void deleteFile(final User user, final Long fileID) throws BusinessException {
-
-    final File file = this.validateAndGetFile(user, fileID);
-    fileRepository.delete(file);
-  }
-
-  @Override
-  public void unShare(final User user, final Long fileID, final List<String> usernames)
-      throws BusinessException {
-
-    final File file = this.validateAndGetFile(user, fileID);
-    final List<User> users = userService.findByUsernames(usernames);
-
-    file.removeAllowedUserList(users);
-    fileRepository.save(file);
-  }
-
-  @Override
-  public void updateFile(
-      final User user, final Long fileID, final UpdateFileNameDTO updateFileNameDTO)
-      throws BusinessException {
-
-    final File file = this.validateAndGetFile(user, fileID);
-
-    file.setName(updateFileNameDTO.getNewName());
-    fileRepository.save(file);
-  }
-
-  @Override
-  @Transactional
-  public List<FileMetadataDTO> getAllMetaData(final User user) {
-    final Set<File> files = user.getFiles();
-    return files.stream().map(FileMetadataDTO::new).collect(Collectors.toList());
-  }
-
-  private File validateAndGetFile(final User user, final Long fileID) throws BusinessException {
-    final Optional<File> fileOpt = fileRepository.findById(fileID);
-    if (fileOpt.isPresent()) {
-      final File file = fileOpt.get();
-      if (file.getOwner().equals(user)) {
+    @Override
+    public File shareFile(final User user, final Long fileID, final List<String> usernames)
+            throws BusinessException {
+        final File file = this.validateAndGetFile(user, fileID);
+        final List<User> users = userService.findByUsernames(usernames);
+        file.addAllowedUserList(users);
+        fileRepository.save(file);
         return file;
-      } else {
-        LOGGER.error("The user {} is not the owner  of the file  {} ", user.getId(), fileID);
-        throw FileNotOwnerException.create();
-      }
-    } else {
-      LOGGER.error("File id {} not found", fileID);
-      throw FileNotFoundException.create();
     }
-  }
+
+    @Override
+    public File unShare(final User user, final Long fileID, final List<String> usernames)
+            throws BusinessException {
+
+        final File file = this.validateAndGetFile(user, fileID);
+        final List<User> users = userService.findByUsernames(usernames);
+
+        file.removeAllowedUserList(users);
+        fileRepository.save(file);
+
+        return file;
+    }
+
+
+    @Override
+    public FileMetadataDTO getMetaData(final User user, final Long fileID) throws BusinessException {
+        final File file = this.validateAndGetFile(user, fileID);
+
+        return new FileMetadataDTO(file);
+    }
+
+    @Override
+    @Transactional
+    public List<FileMetadataDTO> getAllMetaData(final User user) {
+        final Set<File> files = user.getFiles();
+        return files.stream().map(FileMetadataDTO::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public File downloadFile(final User user, final Long fileID) throws BusinessException {
+
+        return this.validateAndGetFile(user, fileID);
+    }
+
+    @Override
+    public void deleteFile(final User user, final Long fileID) throws BusinessException {
+
+        final File file = this.validateAndGetFile(user, fileID);
+        fileRepository.delete(file);
+    }
+
+    @Override
+    public void updateFile(
+            final User user, final Long fileID, final UpdateFileNameDTO updateFileNameDTO)
+            throws BusinessException {
+
+        final File file = this.validateAndGetFile(user, fileID);
+
+        file.setName(updateFileNameDTO.getNewName());
+        fileRepository.save(file);
+    }
+
+    private File validateAndGetFile(final User user, final Long fileID) throws BusinessException {
+        final Optional<File> fileOpt = fileRepository.findById(fileID);
+        if (fileOpt.isPresent()) {
+            final File file = fileOpt.get();
+            if (file.getOwner().equals(user)) {
+                return file;
+            } else {
+                LOGGER.error("The user {} is not the owner  of the file  {} ", user.getId(), fileID);
+                throw FileNotOwnerException.create();
+            }
+        } else {
+            LOGGER.error("File id {} not found", fileID);
+            throw FileNotFoundException.create();
+        }
+    }
 }

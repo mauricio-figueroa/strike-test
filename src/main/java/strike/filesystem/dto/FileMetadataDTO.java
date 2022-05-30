@@ -21,8 +21,24 @@ public class FileMetadataDTO {
 
   public FileMetadataDTO(File file) {
     this.weight = file.getFile().length;
-    this.name = file.getName();
+    this.name = file.getFullName();
     this.creationDate = file.getCreationDate();
     this.modificationDate = file.getModificationDate();
+  }
+
+  public int getWeight() {
+    return weight;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public LocalDateTime getCreationDate() {
+    return creationDate;
+  }
+
+  public LocalDateTime getModificationDate() {
+    return modificationDate;
   }
 }
