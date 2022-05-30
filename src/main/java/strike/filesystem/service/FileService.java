@@ -1,4 +1,4 @@
-package service;
+package strike.filesystem.service;
 
 import java.io.IOException;
 import java.util.List;
@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import strike.filesystem.dto.FileMetadataDTO;
 import strike.filesystem.exception.BusinessException;
+import strike.filesystem.model.File;
 import strike.filesystem.model.User;
 
 public interface FileService {
@@ -16,4 +17,6 @@ public interface FileService {
       throws BusinessException;
 
   FileMetadataDTO getMetaData(final User user, final Long fileID) throws BusinessException;
+
+  File downloadFile(final User user, final Long id) throws BusinessException;
 }

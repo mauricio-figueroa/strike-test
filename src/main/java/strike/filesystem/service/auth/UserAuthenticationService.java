@@ -1,4 +1,4 @@
-package service.auth;
+package strike.filesystem.service.auth;
 
 import java.util.Optional;
 

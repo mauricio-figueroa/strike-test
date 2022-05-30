@@ -1,4 +1,4 @@
-package service;
+package strike.filesystem.service;
 
 import java.util.List;
 import java.util.Optional;

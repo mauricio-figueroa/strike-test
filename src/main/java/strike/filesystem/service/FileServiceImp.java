@@ -1,4 +1,4 @@
-package service;
+package strike.filesystem.service;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,6 +60,22 @@ public class FileServiceImp implements FileService {
       final File file = fileOpt.get();
       if (file.getOwner().equals(user)) {
         return new FileMetadataDTO(file);
+      } else {
+        throw FileNotOwnerException.create();
+      }
+    } else {
+      throw FileNotFoundException.create();
+    }
+  }
+
+  @Override
+  public File downloadFile(final User user, final Long id) throws BusinessException {
+    final Optional<File> fileOpt = fileRepository.findById(id);
+
+    if (fileOpt.isPresent()) {
+      final File file = fileOpt.get();
+      if (file.getOwner().equals(user)) {
+        return file;
       } else {
         throw FileNotOwnerException.create();
       }

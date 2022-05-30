@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import service.auth.UserAuthenticationService;
+import strike.filesystem.service.auth.UserAuthenticationService;
 
 @Component
 public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {

@@ -1,6 +1,8 @@
 package strike.filesystem.controller;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import service.FileService;
 import strike.filesystem.dto.FileMetadataDTO;
 import strike.filesystem.dto.ShareFileRequestBody;
 import strike.filesystem.exception.BusinessException;
+import strike.filesystem.model.File;
 import strike.filesystem.model.User;
+import strike.filesystem.service.FileService;
 
 @RestController
 public class FileController {
@@ -25,7 +28,6 @@ public class FileController {
   public FileController(final FileService fileService) {
     this.fileService = fileService;
   }
-
 
   @PostMapping("/upload")
   public ResponseEntity<?> uploadFile(
@@ -58,5 +60,21 @@ public class FileController {
       throws BusinessException {
     final FileMetadataDTO metaData = fileService.getMetaData(user, id);
     return ResponseEntity.status(HttpStatus.OK).body(metaData);
+  }
+
+  @GetMapping("/download/{id}")
+  public ResponseEntity<byte[]> download(
+      @AuthenticationPrincipal final User user, @PathVariable final Long id)
+      throws BusinessException {
+
+    final File file = fileService.downloadFile(user, id);
+    HttpHeaders header = new HttpHeaders();
+    header.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+    header.set(
+        HttpHeaders.CONTENT_DISPOSITION,
+        "attachment; filename=" + file.getName().replace(" ", "_"));
+    header.setContentLength(file.getFile().length);
+
+    return ResponseEntity.status(HttpStatus.OK).headers(header).body(file.getFile());
   }
 }

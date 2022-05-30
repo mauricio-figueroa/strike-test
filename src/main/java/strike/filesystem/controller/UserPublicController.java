@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import strike.filesystem.exception.UserAlreadyExistException;
-import service.UserService;
-import service.auth.UserAuthenticationService;
+import strike.filesystem.service.UserService;
+import strike.filesystem.service.auth.UserAuthenticationService;
 
 @RestController
 public class UserPublicController {
