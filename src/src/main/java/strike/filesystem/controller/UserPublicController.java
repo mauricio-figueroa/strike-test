@@ -22,7 +22,7 @@ public class UserPublicController {
 
   @Autowired
   public UserPublicController(
-          final UserService userService, final UserAuthenticationService authentication) {
+      final UserService userService, final UserAuthenticationService authentication) {
     this.userService = userService;
     this.authentication = authentication;
   }

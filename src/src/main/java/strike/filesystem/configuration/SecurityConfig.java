@@ -30,10 +30,10 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private static final RequestMatcher PUBLIC_URLS =
-          new OrRequestMatcher(
-                  new AntPathRequestMatcher("/public/**"),
-                  new AntPathRequestMatcher("/h2-console/**"),
-                  new AntPathRequestMatcher("/error"));
+      new OrRequestMatcher(
+          new AntPathRequestMatcher("/public/**"),
+          new AntPathRequestMatcher("/h2-console/**"),
+          new AntPathRequestMatcher("/error"));
 
   private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(PUBLIC_URLS);
 
@@ -57,24 +57,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(final HttpSecurity http) throws Exception {
     http.sessionManagement()
-            .sessionCreationPolicy(STATELESS)
-            .and()
-            .exceptionHandling()
-            .and()
-            .authenticationProvider(provider)
-            .addFilterBefore(restAuthenticationFilter(), AnonymousAuthenticationFilter.class)
-            .authorizeRequests()
-            .requestMatchers(PROTECTED_URLS)
-            .authenticated()
-            .and()
-            .csrf()
-            .disable()
-            .formLogin()
-            .disable()
-            .httpBasic()
-            .disable()
-            .logout()
-            .disable();
+        .sessionCreationPolicy(STATELESS)
+        .and()
+        .exceptionHandling()
+        .and()
+        .authenticationProvider(provider)
+        .addFilterBefore(restAuthenticationFilter(), AnonymousAuthenticationFilter.class)
+        .authorizeRequests()
+        .requestMatchers(PROTECTED_URLS)
+        .authenticated()
+        .and()
+        .csrf()
+        .disable()
+        .formLogin()
+        .disable()
+        .httpBasic()
+        .disable()
+        .logout()
+        .disable();
   }
 
   @Bean
@@ -88,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   SimpleUrlAuthenticationSuccessHandler successHandler() {
     final SimpleUrlAuthenticationSuccessHandler successHandler =
-            new SimpleUrlAuthenticationSuccessHandler();
+        new SimpleUrlAuthenticationSuccessHandler();
     successHandler.setRedirectStrategy(new NoRedirectStrategy());
     return successHandler;
   }
