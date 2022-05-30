@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import strike.filesystem.exception.UserAlreadyExistException;
 import strike.filesystem.model.AppUserRole;
 import strike.filesystem.model.User;
 import strike.filesystem.repository.UserRepository;
@@ -35,7 +36,12 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User save(final String username, final String password) {
+  public User save(final String username, final String password) throws UserAlreadyExistException {
+    final Optional<User> userOpt = userRepository.findByUsername(username);
+
+    if(userOpt.isPresent()){
+      throw UserAlreadyExistException.create();
+    }
 
     User user =
         new User(username, bCryptPasswordEncoder.encode(password), AppUserRole.USER, false, true);

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import strike.filesystem.exception.UserAlreadyExistException;
 import strike.filesystem.service.UserService;
 import strike.filesystem.service.auth.UserAuthenticationService;
 
@@ -25,7 +26,8 @@ public class UserPublicController {
   @PostMapping("/public/users/register")
   public @ResponseBody String register(
       @RequestParam("username") final String username,
-      @RequestParam("password") final String password) {
+      @RequestParam("password") final String password)
+      throws UserAlreadyExistException {
     userService.save(username, password);
 
     return login(username, password);

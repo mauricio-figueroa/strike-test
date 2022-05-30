@@ -2,10 +2,13 @@ package strike.filesystem.model;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,7 +34,15 @@ public class User extends BaseAuditableEntity implements UserDetails {
   @Column(name = "enabled", nullable = false)
   private Boolean enabled;
 
-  public User(final String username, final String password, final AppUserRole appUserRole, final Boolean locked, final Boolean enabled) {
+  @ManyToMany(mappedBy = "allowedUsers")
+  private Set<File> files = new HashSet<>();
+
+  public User(
+      final String username,
+      final String password,
+      final AppUserRole appUserRole,
+      final Boolean locked,
+      final Boolean enabled) {
     this.username = username;
     this.password = password;
     this.appUserRole = appUserRole;
@@ -39,8 +50,7 @@ public class User extends BaseAuditableEntity implements UserDetails {
     this.enabled = enabled;
   }
 
-  public User() {
-  }
+  public User() {}
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -76,5 +86,16 @@ public class User extends BaseAuditableEntity implements UserDetails {
   @Override
   public boolean isEnabled() {
     return enabled;
+  }
+
+  public Set<File> getFiles() {
+    return files;
+  }
+
+  public void addAllowedFile(final File file) {
+    if (this.files == null) {
+      files = new HashSet<>();
+    }
+    files.add(file);
   }
 }
