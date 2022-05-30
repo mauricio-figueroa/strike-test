@@ -83,4 +83,21 @@ public class FileServiceImp implements FileService {
       throw FileNotFoundException.create();
     }
   }
+
+  @Override
+  public void deleteFile(final User user, final Long id) throws BusinessException {
+
+    final Optional<File> fileOpt = fileRepository.findById(id);
+
+    if (fileOpt.isPresent()) {
+      final File file = fileOpt.get();
+      if (file.getOwner().equals(user)) {
+        fileRepository.delete(file);
+      } else {
+        throw FileNotOwnerException.create();
+      }
+    } else {
+      throw FileNotFoundException.create();
+    }
+  }
 }

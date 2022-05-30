@@ -19,4 +19,6 @@ public interface FileService {
   FileMetadataDTO getMetaData(final User user, final Long fileID) throws BusinessException;
 
   File downloadFile(final User user, final Long id) throws BusinessException;
+
+  void deleteFile(final User user, final Long id) throws BusinessException;
 }
