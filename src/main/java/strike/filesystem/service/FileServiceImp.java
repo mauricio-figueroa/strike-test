@@ -7,7 +7,9 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.apache.commons.io.FilenameUtils;
 import strike.filesystem.dto.FileMetadataDTO;
+import strike.filesystem.dto.UpdateFileNameDTO;
 import strike.filesystem.exception.BusinessException;
 import strike.filesystem.exception.FileNotFoundException;
 import strike.filesystem.exception.FileNotOwnerException;
@@ -28,7 +30,9 @@ public class FileServiceImp implements FileService {
 
   @Transactional
   public void uploadFile(final User user, final MultipartFile multipartFile) throws IOException {
-    File file = new File(user, multipartFile.getOriginalFilename(), multipartFile.getBytes());
+    final String originalName = FilenameUtils.getBaseName(multipartFile.getOriginalFilename());
+    final String originalExtension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+    File file = new File(user, originalName, originalExtension, multipartFile.getBytes());
     fileRepository.save(file);
   }
 
@@ -113,6 +117,27 @@ public class FileServiceImp implements FileService {
       if (file.getOwner().equals(user)) {
         final List<User> users = userService.findByUsernames(usernames);
         file.removeAllowedUserList(users);
+        fileRepository.save(file);
+      } else {
+        throw FileNotOwnerException.create();
+      }
+    } else {
+      throw FileNotFoundException.create();
+    }
+  }
+
+  @Override
+  public void updateFile(
+      final User user, final Long fileID, final UpdateFileNameDTO updateFileNameDTO)
+      throws BusinessException {
+
+    final Optional<File> fileOpt = fileRepository.findById(fileID);
+
+    if (fileOpt.isPresent()) {
+      final File file = fileOpt.get();
+
+      if (file.getOwner().equals(user)) {
+        file.setName(updateFileNameDTO.getNewName());
         fileRepository.save(file);
       } else {
         throw FileNotOwnerException.create();

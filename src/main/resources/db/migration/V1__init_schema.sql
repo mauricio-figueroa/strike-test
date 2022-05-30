@@ -19,6 +19,7 @@ create table file
     creation_date     datetime(6) not null,
     modification_date datetime(6) not null,
     name              varchar(255) not null,
+    extension         varchar(5) not null,
     file_blob         LONGBLOB     not null,
     user_id           bigint not null,
     CONSTRAINT file_user__fk

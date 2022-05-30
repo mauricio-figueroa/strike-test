@@ -24,6 +24,9 @@ public class File extends BaseAuditableEntity {
   @Column(name = "name")
   private String name;
 
+  @Column(name = "extension")
+  private String extension;
+
   @Lob
   @Column(name = "file_blob", columnDefinition = "BLOB")
   private byte[] file;
@@ -35,10 +38,11 @@ public class File extends BaseAuditableEntity {
       inverseJoinColumns = {@JoinColumn(name = "user_id")})
   private Set<User> allowedUsers = new HashSet<>();
 
-  public File(final User user, final String name, final byte[] file) {
+  public File(final User user, final String name, final String extension, final byte[] file) {
     this.owner = user;
     this.name = name;
     this.file = file;
+    this.extension = extension;
   }
 
   public File() {}
@@ -76,7 +80,19 @@ public class File extends BaseAuditableEntity {
     return file;
   }
 
+  public String getExtension() {
+    return extension;
+  }
+
   public Set<User> getAllowedUsers() {
     return allowedUsers;
+  }
+
+  public void setName(final String name) {
+    this.name = name;
+  }
+
+  public String getFullName() {
+    return name + "." + extension;
   }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import strike.filesystem.dto.FileMetadataDTO;
+import strike.filesystem.dto.UpdateFileNameDTO;
 import strike.filesystem.exception.BusinessException;
 import strike.filesystem.model.File;
 import strike.filesystem.model.User;
@@ -25,4 +26,6 @@ public interface FileService {
   void unShare(final User user, final Long fileID, final List<String> usernames)
       throws BusinessException;
 
+  void updateFile(final User user, final Long fileID, final UpdateFileNameDTO updateFileNameDTO)
+      throws BusinessException;
 }
