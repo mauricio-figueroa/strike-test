@@ -2,6 +2,7 @@ package strike.filesystem.service.auth;
 
 import java.util.Optional;
 
+import strike.filesystem.exception.BusinessException;
 import strike.filesystem.model.User;
 
 public interface UserAuthenticationService {
@@ -13,7 +14,7 @@ public interface UserAuthenticationService {
    * @param password
    * @return an {@link Optional} of a user when login succeeds
    */
-  Optional<String> login(String username, String password);
+  String login(String username, String password) throws BusinessException;
 
   /**
    * Finds a user by its dao-key.
