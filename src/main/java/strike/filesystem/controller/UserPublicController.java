@@ -1,5 +1,6 @@
 package strike.filesystem.controller;
 
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +12,8 @@ import strike.filesystem.dto.CreateOrLoginUserDTO;
 import strike.filesystem.exception.BusinessException;
 import strike.filesystem.service.UserService;
 import strike.filesystem.service.auth.UserAuthenticationService;
+
+
 
 @RestController
 @RequestMapping("/public/user")
@@ -27,7 +30,7 @@ public class UserPublicController {
   }
 
   @PostMapping("/register")
-  public @ResponseBody String register(@RequestBody CreateOrLoginUserDTO createOrLoginUserDTO)
+  public @ResponseBody String register(@Valid @RequestBody CreateOrLoginUserDTO createOrLoginUserDTO)
           throws BusinessException {
     userService.save(createOrLoginUserDTO.getUsername(), createOrLoginUserDTO.getPassword());
 
@@ -35,7 +38,7 @@ public class UserPublicController {
   }
 
   @PostMapping("/login")
-  public @ResponseBody String login(@RequestBody CreateOrLoginUserDTO createOrLoginUserDTO) throws BusinessException {
+  public @ResponseBody String login(@Valid @RequestBody CreateOrLoginUserDTO createOrLoginUserDTO) throws BusinessException {
     return authentication.login(createOrLoginUserDTO.getUsername(), createOrLoginUserDTO.getPassword());
   }
 }

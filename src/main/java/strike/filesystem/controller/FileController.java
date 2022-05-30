@@ -1,6 +1,7 @@
 package strike.filesystem.controller;
 
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -72,7 +73,7 @@ public class FileController {
     @PostMapping("/share")
     public ResponseEntity<?> shareFile(
             @AuthenticationPrincipal final User user,
-            @RequestBody ShareFileRequestBody shareFileRequestBody)
+            @Valid @RequestBody ShareFileRequestBody shareFileRequestBody)
             throws BusinessException {
         LOGGER.info("User {} share File {}", user.getId(), shareFileRequestBody.getFileID());
 
@@ -85,7 +86,7 @@ public class FileController {
     @PostMapping("/unshare")
     public ResponseEntity<?> unShareFile(
             @AuthenticationPrincipal final User user,
-            @RequestBody ShareFileRequestBody shareFileRequestBody)
+            @Valid @RequestBody ShareFileRequestBody shareFileRequestBody)
             throws BusinessException {
 
         LOGGER.info("User {} unshare File {}", user.getId(), shareFileRequestBody.getFileID());
@@ -125,7 +126,7 @@ public class FileController {
     public ResponseEntity<?> modifyName(
             @AuthenticationPrincipal final User user,
             @PathVariable final Long id,
-            @RequestBody UpdateFileNameDTO updateFileNameDTO)
+            @Valid @RequestBody UpdateFileNameDTO updateFileNameDTO)
             throws BusinessException {
 
         LOGGER.info("User {} modify File name{}", user.getId(), id);

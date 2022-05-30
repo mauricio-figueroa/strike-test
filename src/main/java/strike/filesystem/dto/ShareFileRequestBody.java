@@ -2,12 +2,19 @@ package strike.filesystem.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ShareFileRequestBody {
 
+  @NotNull
+  @NotEmpty
   @JsonProperty("usernames")
   private final List<String> usernames;
+
+  @NotNull
   @JsonProperty("file_id")
   private final Long fileID;
 
