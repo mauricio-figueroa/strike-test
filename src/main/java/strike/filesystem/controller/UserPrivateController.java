@@ -10,7 +10,7 @@ import strike.filesystem.model.User;
 import strike.filesystem.service.UserService;
 import strike.filesystem.service.auth.UserAuthenticationService;
 
-@RestController("/users")
+@RestController
 public class UserPrivateController {
 
   private final UserService userService;
@@ -23,12 +23,12 @@ public class UserPrivateController {
     this.authentication = authentication;
   }
 
-  @GetMapping("/current")
+  @GetMapping("/users/current")
   public User getCurrent(@AuthenticationPrincipal final User user) {
     return user;
   }
 
-  @GetMapping("/logout")
+  @GetMapping("/users/logout")
   public ResponseEntity<?> logout(@AuthenticationPrincipal final User user) {
     authentication.logout(user);
     return ResponseEntity.ok().build();

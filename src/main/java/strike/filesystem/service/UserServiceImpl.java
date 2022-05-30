@@ -1,5 +1,6 @@
 package strike.filesystem.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,5 +53,10 @@ public class UserServiceImpl implements UserService {
   @Override
   public Optional<User> findByUsername(final String username) {
     return userRepository.findByUsername(username);
+  }
+
+  @Override
+  public List<User> findByUsernames(final List<String> usernames) {
+    return userRepository.findByUsernameIn(usernames);
   }
 }

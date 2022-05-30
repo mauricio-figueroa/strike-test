@@ -8,7 +8,7 @@ create table users
     enabled           bit,
     locked            bit,
     password          varchar(255) not null,
-    username          varchar(255) not null);
+    username          varchar(255) not null unique);
 
 create index user_username_idx on users (username);
 

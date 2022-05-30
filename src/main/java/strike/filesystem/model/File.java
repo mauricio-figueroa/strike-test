@@ -1,6 +1,7 @@
 package strike.filesystem.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,7 +19,7 @@ public class File extends BaseAuditableEntity {
 
   @OneToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "user_id", referencedColumnName = "id")
-  private User user;
+  private User owner;
 
   @Column(name = "name")
   private String name;
@@ -35,7 +36,7 @@ public class File extends BaseAuditableEntity {
   private Set<User> allowedUsers = new HashSet<>();
 
   public File(final User user, final String name, final byte[] file) {
-    this.user = user;
+    this.owner = user;
     this.name = name;
     this.file = file;
   }
@@ -44,10 +45,33 @@ public class File extends BaseAuditableEntity {
 
   }
 
+  public void addAllowedUserList(final List<User> users) {
+    if (this.allowedUsers == null) {
+      allowedUsers = new HashSet<>();
+    }
+    allowedUsers.addAll(users);
+  }
+
   public void addAllowedUsers(final User user) {
     if (this.allowedUsers == null) {
       allowedUsers = new HashSet<>();
     }
     allowedUsers.add(user);
+  }
+
+  public User getOwner() {
+    return owner;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public byte[] getFile() {
+    return file;
+  }
+
+  public Set<User> getAllowedUsers() {
+    return allowedUsers;
   }
 }

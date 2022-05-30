@@ -5,10 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import strike.filesystem.dto.ShareFileRequestBody;
+import strike.filesystem.exception.BusinessException;
 import strike.filesystem.model.User;
 import strike.filesystem.service.FileService;
 
@@ -35,5 +38,14 @@ public class FileController {
       message = "Could not upload the file: " + file.getOriginalFilename() + "!";
       return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
     }
+  }
+
+  @PostMapping("/share")
+  public ResponseEntity<?> shareFile(
+      @AuthenticationPrincipal final User user,
+      @RequestBody ShareFileRequestBody shareFileRequestBody) throws BusinessException {
+      fileService.shareFile(
+          user, shareFileRequestBody.getFileID(), shareFileRequestBody.getUsernames());
+      return ResponseEntity.status(HttpStatus.OK).build();
   }
 }
