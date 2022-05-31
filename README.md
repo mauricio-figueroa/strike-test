@@ -1,7 +1,5 @@
 # Strike filesystem test
 
-Crypto card integration with Pomelo
-
 ## Description
 The application contains the logic of a distributed filesystem, with a small authentication system and roles-permissions.
 
