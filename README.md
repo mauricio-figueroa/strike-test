@@ -16,15 +16,29 @@ Execute
 `gradle bootRun` in terminal
 
 ## Documentation
+
+
 ### DER
 ![](documentation/DER-Strike.png)
+
+The application starts on port 8080 and the in-memory database can be accessed by going to 'http://localhost:8080/h2-console/login.jsp'. 
+Credentials are:
+
+- Username: sa
+- Password: password
+
+![](documentation/h2.png)
+
+Entering here you can see the structure of the database.
+
 
 ### Considerations
 - A file is related to its owner directly, but it is also related to all users who have permissions on it. The exercise did not specify the type of access, so they were not typed.
 - There are only 2 public endpoints, the rest of the endpoints needs to authenticate with the 'Authorization: Bearer' header.
 - In order to show the testing abilities I tested the 'FileServiceImp' class. The other classes were not tested because of the time it took to do the exercise.
-- Inside the documentation folder, a collection of postman is attached to test the operation of the application. (Path /documentation/strike-postman.json)
-- In order not to corrupt the files, only the name can be changed, the original extension will always be respected
+- Inside the documentation folder, a collection of postman is attached to test the operation of the application. (Path /documentation/strike-postman.json).
+- In order not to corrupt the files, only the name can be changed, the original extension will always be respected.
+- It-s an in-memory database so as not to have external dependency to initialize the project. This means that every time we start the application, the database is cleaned.
 
 ## how to consume the services of the application
 
