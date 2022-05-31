@@ -34,10 +34,9 @@ public class FileServiceImp implements FileService {
     }
 
     @Transactional
-    public File uploadFile(final User user, final MultipartFile multipartFile)
+    public File uploadFile(final User user, final MultipartFile multipartFile, final String fileName)
             throws BusinessException {
 
-        final String fileName = FilenameUtils.getBaseName(multipartFile.getOriginalFilename());
         final String fileExtension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
 
         try {

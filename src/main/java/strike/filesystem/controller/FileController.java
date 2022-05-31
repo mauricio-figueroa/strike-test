@@ -43,12 +43,12 @@ public class FileController {
     @PostMapping
     public ResponseEntity<?> uploadFile(
             @AuthenticationPrincipal final User user,
-            @RequestParam("file") MultipartFile fileToUpload)
+            @RequestParam("file") MultipartFile fileToUpload, @RequestParam("name") String fileName)
             throws BusinessException {
 
         LOGGER.info("User {} Upload File {}", user.getId(), fileToUpload.getOriginalFilename());
 
-        final File file = fileService.uploadFile(user, fileToUpload);
+        final File file = fileService.uploadFile(user, fileToUpload, fileName);
 
         return ResponseEntity.status(HttpStatus.OK).body(file);
     }

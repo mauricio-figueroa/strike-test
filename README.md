@@ -8,7 +8,7 @@ The application contains the logic of a distributed filesystem, with a small aut
 It allows us to create a user, authenticate it, upload a file, download it, delete it, share it and unshare it, among other functionalities.
 
 ## Technologies
-* JAVA 11 (LTS)
+* JAVA 11
 * SpringBoot
 * Gradle
 * H2 (in memory database)
@@ -23,9 +23,10 @@ Execute
 
 ### Considerations
 - A file is related to its owner directly, but it is also related to all users who have permissions on it. The exercise did not specify the type of access, so they were not typed.
-- There are only 2 public endpoints for the rest you need to authenticate with the 'Authorization: Bearer' header.
+- There are only 2 public endpoints, the rest of the endpoints needs to authenticate with the 'Authorization: Bearer' header.
 - In order to show the testing abilities I tested the 'FileServiceImp' class. The other classes were not tested because of the time it took to do the exercise.
-- Inside the documentation folder, a collection of postman is attached to test the operation of the application
+- Inside the documentation folder, a collection of postman is attached to test the operation of the application. (Path /documentation/strike-postman.json)
+- In order not to corrupt the files, only the name can be changed, the original extension will always be respected
 
 ## how to consume the services of the application
 
@@ -60,9 +61,12 @@ curl --location --request GET 'localhost:8080/user/logout' \
 
 ### Upload File
 <pre><code>
-curl --location --request POST 'localhost:8080/file' \
---header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAKtWyiwuVrJSyk8uyS9ILUpT0lHKTCxRsjI0MzW2NDM1NDHUUUqtKAALmBiYGpqCBEqLU4vyEnNTgfqy8jPylGoBygxwfkYAAAA.O4QYEYe9QBP-jQ-abZ4hC4yI_oiOP1gHGmqHUx91qpo' \
---form 'file=@"/Users/mauricio.figueroa/Desktop/buenbit-stg.txt"'
+curl --location --request PUT 'localhost:8080/file/1' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAKtWyiwuVrJSyk8uyS9ILUpT0lHKTCxRsjI0MzW2NDM3NzTUUUqtKAALmBiYmhiCBEqLU4vyEnNTgfqy8jPylGoBeU5aG0YAAAA.HAgjw4N0k1kPKeWTJZv1M9qYqNyUSTegwXAeIYvS-hE' \
+--data-raw '{
+    "new_name":"saraza"
+}'
 </code></pre>
 
 ### Download File

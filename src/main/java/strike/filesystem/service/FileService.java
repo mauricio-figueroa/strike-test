@@ -11,7 +11,7 @@ import strike.filesystem.model.User;
 
 public interface FileService {
 
-  File uploadFile(final User user, final MultipartFile multipartFile) throws BusinessException;
+  File uploadFile(final User user, final MultipartFile multipartFile, final String fileName) throws BusinessException;
 
   File shareFile(final User user, final Long fileID, final List<String> usernames)
       throws BusinessException;

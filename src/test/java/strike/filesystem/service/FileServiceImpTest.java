@@ -36,7 +36,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class FileServiceImpTest {
 
-
     @Mock
     private FileRepository fileRepository;
 
@@ -63,7 +62,7 @@ class FileServiceImpTest {
         when(fileRepository.save(any())).thenThrow(new RuntimeException("test exception"));
 
         assertThrows(BusinessException.class, () -> {
-            target.uploadFile(user, multipartFile);
+            target.uploadFile(user, multipartFile, "test");
         });
     }
 
@@ -72,7 +71,7 @@ class FileServiceImpTest {
         User user = new User();
         MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
         when(multipartFile.getOriginalFilename()).thenReturn("test.csv");
-        final File file = target.uploadFile(user, multipartFile);
+        final File file = target.uploadFile(user, multipartFile, "test");
 
         assertNotNull(file, "file is null");
         verify(fileRepository).save(any());
