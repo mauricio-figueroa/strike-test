@@ -273,7 +273,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAKtWyiwuVrJSyk8uyS9ILUpT0lHKTCxRsjI0MzW2NDM1NDHUUUqtKAALmBiYGpqCBEqLU4vyEnNTgfqy8jPylGoBygxwfkYAAAA.O4QYEYe9QBP-jQ-abZ4hC4yI_oiOP1gHGmqHUx91qpo",
+							"value": "eyJhbGciOiJIUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAKtWyiwuVrJSyk8uyS9ILUpT0lHKTCxRsjI0MzW2NDM3NzTUUUqtKAALmBiYmhiCBEqLU4vyEnNTgfqy8jPylGoBeU5aG0YAAAA.HAgjw4N0k1kPKeWTJZv1M9qYqNyUSTegwXAeIYvS-hE",
 							"type": "string"
 						}
 					]
@@ -287,6 +287,11 @@
 							"key": "file",
 							"type": "file",
 							"src": "/Users/mauricio.figueroa/Desktop/buenbit-stg.txt"
+						},
+						{
+							"key": "name",
+							"value": "sarlanga",
+							"type": "text"
 						}
 					]
 				},
